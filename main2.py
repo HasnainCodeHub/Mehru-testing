@@ -78,7 +78,7 @@ def update_book_status(book_id, issued):
 #         return data.get("items", [])
 #     st.warning("⚠ API call failed!")
 #     return []
-GOOGLE_API_KEY = "AIzaSyD5anhubO0wzKahG7CqGwvEkA38nBiMx7w"
+# GOOGLE_API_KEY = "AIzaSyD5anhubO0wzKahG7CqGwvEkA38nBiMx7w"
 # def fetch_books_api(query):
 #     url = f"https://www.googleapis.com/books/v1/volumes?q={query}&key={GOOGLE_API_KEY}"
 #     response = requests.get(url)
@@ -89,15 +89,15 @@ GOOGLE_API_KEY = "AIzaSyD5anhubO0wzKahG7CqGwvEkA38nBiMx7w"
 #         st.warning("⚠ API call failed! Check logs for details.")
 #         return []
 def fetch_books_api(query):
-    url = f"https://www.googleapis.com/books/v1/volumes?q={query}&key={GOOGLE_API_KEY}"
+    url = f"https://www.googleapis.com/books/v1/volumes?q={query}"
     
     try:
         response = requests.get(url, timeout=10)  # 10-second timeout
         
         # Debugging Output
-        st.write(f"📡 API Request URL: {url}")
-        st.write(f"📡 Response Status Code: {response.status_code}")
-        st.write(f"📡 Response Content: {response.text[:500]}")  # Show first 500 chars of response
+        # st.write(f"📡 API Request URL: {url}")
+        # st.write(f"📡 Response Status Code: {response.status_code}")
+        # st.write(f"📡 Response Content: {response.text[:500]}")  # Show first 500 chars of response
 
         if response.status_code == 200:
             data = response.json()
