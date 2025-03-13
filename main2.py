@@ -70,34 +70,14 @@ def update_book_status(book_id, issued):
         session.commit()
     session.close()
 
-# def fetch_books_api(query):
-#     url = f"https://www.googleapis.com/books/v1/volumes?q={query}"
-#     response = requests.get(url)
-#     if response.status_code == 200:
-#         data = response.json()
-#         return data.get("items", [])
-#     st.warning("⚠ API call failed!")
-#     return []
+
 GOOGLE_API_KEY = "AIzaSyDWoJbDsasIM4R2ny92ke4Qf66yUkNHveA"
-# def fetch_books_api(query):
-#     url = f"https://www.googleapis.com/books/v1/volumes?q={query}&key={GOOGLE_API_KEY}"
-#     response = requests.get(url)
-#     if response.status_code == 200:
-#         data = response.json()
-#         return data.get("items", [])
-#     else:
-#         st.warning("⚠ API call failed! Check logs for details.")
-#         return []
+
 def fetch_books_api(query):
-    url = f"https://www.googleapis.com/books/v1/volumes?q={query}&key={GOOGLE_API_KEY}"
+    url = f"https://www.googleapis.com/books/v1/volumes?q={query}&key=AIzaSyDWoJbDsasIM4R2ny92ke4Qf66yUkNHveA"
     
     try:
         response = requests.get(url, timeout=10)  # 10-second timeout
-        
-        # Debugging Output
-        # st.write(f"📡 API Request URL: {url}")
-        # st.write(f"📡 Response Status Code: {response.status_code}")
-        # st.write(f"📡 Response Content: {response.text[:500]}")  # Show first 500 chars of response
 
         if response.status_code == 200:
             data = response.json()
@@ -185,20 +165,7 @@ elif choice == "Recommendations":
     else:
         st.info("🎉 You've read all the books in your library!")
 
-# elif choice == "API Search":
-#     st.subheader("🌍 Search Books from API")
-#     query = st.text_input("Search Books")
-#     if st.button("Search API", use_container_width=True):
-#         books = fetch_books_api(query)
-#         if books:
-#             for book in books:
-#                 info = book.get("volumeInfo", {})
-#                 title = info.get("title", "Unknown")
-#                 author = ", ".join(info.get("authors", ["Unknown"]))
-#                 book_link = info.get("infoLink", "#")
-#                 st.write(f"**[{title}]({book_link})** by {author}")
-#         else:
-#             st.warning("No books found.")
+
 st.subheader("🌍 Search Books from API")
 query = st.text_input("Search Books")
 
