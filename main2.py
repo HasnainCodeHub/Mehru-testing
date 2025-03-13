@@ -70,13 +70,30 @@ def update_book_status(book_id, issued):
         session.commit()
     session.close()
 
+# def fetch_books_api(query):
+#     url = f"https://www.googleapis.com/books/v1/volumes?q={query}"
+#     response = requests.get(url)
+#     if response.status_code == 200:
+#         data = response.json()
+#         return data.get("items", [])
+#     st.warning("⚠ API call failed!")
+#     return []
+# GOOGLE_API_KEY = "AIzaSyD5anhubO0wzKahG7CqGwvEkA38nBiMx7w"
 def fetch_books_api(query):
     url = f"https://www.googleapis.com/books/v1/volumes?q={query}"
     response = requests.get(url)
+    # st.write(f"API Request URL: {url}")  # Debugging
+    # st.write(f"Response Status Code: {response.status_code}")  # Debugging
+    # st.write(f"Response Text: {response.text}")  # Debugging
+
     if response.status_code == 200:
         data = response.json()
         return data.get("items", [])
-    return []
+    else:
+        st.warning("⚠ API call failed! Check logs for details.")
+        return []
+
+
 
 # Streamlit UI
 st.set_page_config(page_title="📚 Library Manager", layout="wide")
@@ -143,19 +160,49 @@ elif choice == "Recommendations":
     else:
         st.info("🎉 You've read all the books in your library!")
 
-elif choice == "API Search":
-    st.subheader("🌍 Search Books from API")
-    query = st.text_input("Search Books")
-    if st.button("Search API", use_container_width=True):
-        books = fetch_books_api(query)
-        if books:
-            for book in books:
-                info = book.get("volumeInfo", {})
-                title = info.get("title", "Unknown")
-                author = ", ".join(info.get("authors", ["Unknown"]))
-                book_link = info.get("infoLink", "#")
-                st.write(f"**[{title}]({book_link})** by {author}")
-        else:
-            st.warning("No books found.")
+# elif choice == "API Search":
+#     st.subheader("🌍 Search Books from API")
+#     query = st.text_input("Search Books")
+#     if st.button("Search API", use_container_width=True):
+#         books = fetch_books_api(query)
+#         if books:
+#             for book in books:
+#                 info = book.get("volumeInfo", {})
+#                 title = info.get("title", "Unknown")
+#                 author = ", ".join(info.get("authors", ["Unknown"]))
+#                 book_link = info.get("infoLink", "#")
+#                 st.write(f"**[{title}]({book_link})** by {author}")
+#         else:
+#             st.warning("No books found.")
+st.subheader("🌍 Search Books from API")
+query = st.text_input("Search Books")
+
+if st.button("Search API", use_container_width=True):
+    books = fetch_books_api(query)
+
+    if books:
+        for book in books:
+            info = book.get("volumeInfo", {})
+            title = info.get("title", "Unknown")
+            author = ", ".join(info.get("authors", ["Unknown"]))
+            book_link = info.get("infoLink", "#")
+            thumbnail = info.get("imageLinks", {}).get("thumbnail", None)
+
+            # Display the book title as a clickable link
+            st.markdown(f"### [{title}]({book_link}) by {author}")
+
+            # Display the book cover image if available
+            if thumbnail:
+                st.image(thumbnail, width=150)
+
+            # Display book description if available
+            description = info.get("description", "No description available.")
+            st.write(description)
+
+            st.markdown("---")  # Add a separator for better readability
+
+    else:
+        st.warning("No books found. Try another search term.")
+
 
 st.sidebar.info("📚 Library Manager - Organize, Track, and Enjoy Your Books!")
