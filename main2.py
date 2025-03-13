@@ -74,7 +74,7 @@ def update_book_status(book_id, issued):
 GOOGLE_API_KEY = "AIzaSyDWoJbDsasIM4R2ny92ke4Qf66yUkNHveA"
 
 def fetch_books_api(query):
-    url = f"https://www.googleapis.com/books/v1/volumes?q={query}&key=AIzaSyDWoJbDsasIM4R2ny92ke4Qf66yUkNHveA"
+    url = f"https://www.googleapis.com/books/v1/volumes?q={query}&key={GOOGLE_API_KEY}"
     
     try:
         response = requests.get(url, timeout=10)  # 10-second timeout
