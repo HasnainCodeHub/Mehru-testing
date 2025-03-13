@@ -79,20 +79,45 @@ def update_book_status(book_id, issued):
 #     st.warning("⚠ API call failed!")
 #     return []
 GOOGLE_API_KEY = "AIzaSyD5anhubO0wzKahG7CqGwvEkA38nBiMx7w"
+# def fetch_books_api(query):
+#     url = f"https://www.googleapis.com/books/v1/volumes?q={query}&key={GOOGLE_API_KEY}"
+#     response = requests.get(url)
+#     if response.status_code == 200:
+#         data = response.json()
+#         return data.get("items", [])
+#     else:
+#         st.warning("⚠ API call failed! Check logs for details.")
+#         return []
 def fetch_books_api(query):
     url = f"https://www.googleapis.com/books/v1/volumes?q={query}&key={GOOGLE_API_KEY}"
-    response = requests.get(url)
-    # st.write(f"API Request URL: {url}")  # Debugging
-    # st.write(f"Response Status Code: {response.status_code}")  # Debugging
-    # st.write(f"Response Text: {response.text}")  # Debugging
+    
+    try:
+        response = requests.get(url, timeout=10)  # 10-second timeout
+        
+        # Debugging Output
+        st.write(f"📡 API Request URL: {url}")
+        st.write(f"📡 Response Status Code: {response.status_code}")
+        st.write(f"📡 Response Content: {response.text[:500]}")  # Show first 500 chars of response
 
-    if response.status_code == 200:
-        data = response.json()
-        return data.get("items", [])
-    else:
-        st.warning("⚠ API call failed! Check logs for details.")
-        return []
+        if response.status_code == 200:
+            data = response.json()
+            return data.get("items", [])
 
+        elif response.status_code == 403:
+            st.error("❌ API access forbidden. Check your API key and quota limits.")
+        elif response.status_code == 429:
+            st.warning("⚠ Too many requests! Google API rate limit exceeded. Try again later.")
+        else:
+            st.error(f"❌ API returned unexpected error: {response.status_code}")
+
+    except requests.exceptions.Timeout:
+        st.error("⚠ API request timed out! Please try again.")
+    except requests.exceptions.ConnectionError:
+        st.error("❌ Connection error! Streamlit Cloud might be blocking API requests.")
+    except requests.exceptions.RequestException as e:
+        st.error(f"❌ An unexpected error occurred: {e}")
+
+    return []
 
 
 # Streamlit UI
