@@ -78,9 +78,9 @@ def update_book_status(book_id, issued):
 #         return data.get("items", [])
 #     st.warning("⚠ API call failed!")
 #     return []
-# GOOGLE_API_KEY = "AIzaSyD5anhubO0wzKahG7CqGwvEkA38nBiMx7w"
+GOOGLE_API_KEY = "AIzaSyD5anhubO0wzKahG7CqGwvEkA38nBiMx7w"
 def fetch_books_api(query):
-    url = f"https://www.googleapis.com/books/v1/volumes?q={query}"
+    url = f"https://www.googleapis.com/books/v1/volumes?q={query}&key={GOOGLE_API_KEY}"
     response = requests.get(url)
     # st.write(f"API Request URL: {url}")  # Debugging
     # st.write(f"Response Status Code: {response.status_code}")  # Debugging
